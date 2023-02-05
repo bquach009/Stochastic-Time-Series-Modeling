@@ -80,7 +80,7 @@ def neg_log_likelihood(params, returns):
     return -log_likelihood(params, returns)
 
 
-def optimize_parameters(returns, trials=1000, bounds=None, use_mse=True):
+def optimize_parameters(returns, trials=1000, bounds=None, mode='likelihood'):
     '''
     Loops through trials (default 100) times of random initializations of 
     the parameters within certain bounds made using assumptions to avoid
@@ -97,6 +97,7 @@ def optimize_parameters(returns, trials=1000, bounds=None, use_mse=True):
     4. Our jump mean is also somewhere been 0 and 2
     
     '''
+    assert mode in ['likelihood', 'method_of_moments', 'mse']
     
     # Bounds must be in order of mu, sigma, jump_rate, jump_mean, jump_std
     if bounds is None:
@@ -106,12 +107,15 @@ def optimize_parameters(returns, trials=1000, bounds=None, use_mse=True):
     best_params = None
     best_neg_likelihood = np.inf
     
-    if not use_mse:
+    if mode == 'likelihood':
         calibration_func = neg_log_likelihood
         print('Using Likelihood')
-    else:
+    elif mode == 'method_of_moments':
         calibration_func = method_of_moments
         print('Using Method Of Moments')
+    else:
+        calibration_func = simple_mse_calibration 
+        print('Using Simple MSE')
     
     for i in tqdm(range(trials)):
         initial_params = []
