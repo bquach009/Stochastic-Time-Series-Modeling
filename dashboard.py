@@ -27,7 +27,7 @@ colors = {
     'text': '#FFFFFF'
 }
 
-input_styling = {'height': '5vh'}
+input_styling = {'height': '100%', 'margin' : '0px'}
 
 
 app.layout = html.Div(style={'backgroundColor': colors['background'], 
@@ -58,7 +58,11 @@ app.layout = html.Div(style={'backgroundColor': colors['background'],
 def update_output(n_clicks, start_date, end_date, ticker):
     if not n_clicks:
         raise PreventUpdate
+        
+    ticker = ticker.upper()
     data = pull_data(ticker)
+    data = data[data.index <= end_date]
+    data = data[data.index >= start_date]
     
     if data.empty:
         message = "Couldn't pull data, check ticker again or wifi connection"
