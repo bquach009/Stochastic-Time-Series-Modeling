@@ -6,9 +6,8 @@ Created on Sun Feb  5 20:32:53 2023
 @author: brandonquach
 """
 
-import dash
 import dash_core_components as dcc
-from dash import html
+from dash import html, Dash
 from dash.dependencies import Input, Output, State
 from estimate_merton_parameters import pull_data
 from datetime import datetime, timedelta
@@ -19,7 +18,7 @@ from dash.exceptions import PreventUpdate
 #APPLICATION DASH
 ###################
 
-app = dash.Dash()
+app = Dash(__name__)
 
 # Colors
 colors = {
@@ -35,7 +34,6 @@ app.layout = html.Div(style={'backgroundColor': colors['background'],
                       children=[
     html.H1(children='Stock Data Visualizer', style={'textAlign': 'center'
         }),
-    
     html.Div([
         dcc.Input(id='ticker-input', type='text', placeholder='Ticker', style=input_styling),
         dcc.DatePickerRange(
@@ -43,7 +41,8 @@ app.layout = html.Div(style={'backgroundColor': colors['background'],
             id='my-date',
             start_date=str((datetime.now() - timedelta(days=365*5)).date()),
             end_date=str(datetime.now().date())),
-        html.Button('Submit', id='submit-val', n_clicks=0, style=input_styling),
+        html.Button('Submit', id='submit-val', n_clicks=0, style=input_styling)], className='row'),
+    html.Div([
         html.Div(id='Text', style={'font-size': '26px'}),    
         dcc.Graph(id='totalsales'),
 ])])
@@ -75,5 +74,6 @@ def update_output(n_clicks, start_date, end_date, ticker):
     fig_totalsales.update_layout(title = 'Daily Closing', width=1350, height=450)
     
     return fig_totalsales, title
-    
-app.run_server(debug=True, use_reloader=True)
+
+if __name__ == '__main__':
+    app.run_server(debug=True, use_reloader=True)
