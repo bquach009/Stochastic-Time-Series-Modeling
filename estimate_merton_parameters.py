@@ -127,7 +127,7 @@ def optimize_parameters(returns, trials=1000, bounds=None, mode='likelihood'):
                 r = 5
             initial_params.append(np.random.uniform(l, r))
         # estimate the parameters estimating MLE
-        results = minimize(calibration_func, initial_params, args=(returns,), method='SLSQP', bounds = bounds, tol=1e-16)
+        results = minimize(calibration_func, initial_params, args=(returns,), bounds = bounds, tol=1e-16)
         
         # Store if best
         mu, sigma, jump_rate, jump_mean, jump_std = results.x

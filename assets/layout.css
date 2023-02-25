@@ -13,3 +13,20 @@
 .DateInput_input, .DateInput_input_1 {
   height: 30px;
 }
+
+body {
+  background-color: lightblue;
+}
+
+h1 {
+  text-align: center;
+  color: darkblue;
+}
+
+#Text {
+  text-align: center;
+}
+
+#totalsales {
+  display: flex;
+}
