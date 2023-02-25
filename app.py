@@ -26,7 +26,7 @@ colors = {
     'text': '#FFFFFF'
 }
 
-input_styling = {'height': '100%', 'margin' : '0px'}
+input_styling = {}
 
 
 app.layout = html.Div(style={'backgroundColor': colors['background'], 
@@ -35,13 +35,23 @@ app.layout = html.Div(style={'backgroundColor': colors['background'],
     html.H1(children='Stock Data Visualizer', style={'textAlign': 'center'
         }),
     html.Div([
-        dcc.Input(id='ticker-input', type='text', placeholder='Ticker', style=input_styling),
+        dcc.Input(id='ticker-input', 
+                  type='text', 
+                  placeholder='Ticker', 
+                  style=input_styling, 
+                  className='item'),
         dcc.DatePickerRange(
             style=input_styling,
             id='my-date',
             start_date=str((datetime.now() - timedelta(days=365*5)).date()),
-            end_date=str(datetime.now().date())),
-        html.Button('Submit', id='submit-val', n_clicks=0, style=input_styling)], className='row'),
+            end_date=str(datetime.now().date()),
+            className='item'),
+        html.Button('Submit', 
+                    id='submit-val', 
+                    n_clicks=0, 
+                    style=input_styling,
+                    className='item')], 
+        className='row'),
     html.Div([
         html.Div(id='Text', style={'font-size': '26px'}),    
         dcc.Graph(id='totalsales'),

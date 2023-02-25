@@ -1,14 +1,15 @@
-"""
-Created on Fri Feb 24 14:16:45 2023
-
-@author: brandonquach
-"""
-
-.DateInput_input, .DateInput_input_1 {
-  height: 2px;
+.row {
+    display: table;
+    border-spacing: 20px; /* For controlling spacing between cells... */
 }
 
-.class {
-  height: 5%;
-  max-height: 50px;
+.item {
+    display: table-cell;
+    height: 30px;
+    margin: 10px;
+    min-width: 100px;
+}
+
+.DateInput_input, .DateInput_input_1 {
+  height: 30px;
 }
