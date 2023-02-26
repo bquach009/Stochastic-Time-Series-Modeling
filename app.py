@@ -48,10 +48,11 @@ app.layout = html.Div(children=[
                     n_clicks=0, 
                     className='item')], 
         className='row'),
+        dcc.Loading(
     html.Div([
         html.Div(id='Text'),    
         dcc.Graph(id='totalsales'),
-])])
+]))])
 
 # Inputs trigger callback, States are read only
 @app.callback(
