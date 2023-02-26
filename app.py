@@ -71,7 +71,7 @@ def update_output(n_clicks, start_date, end_date, ticker):
     
     returns = data['log_return'].dropna().values[-365*2:]
 
-    mu, sigma, jump_rate, jump_mean, jump_std = optimize_parameters(returns, trials=2000, mode='likelihood')   
+    mu, sigma, jump_rate, jump_mean, jump_std = optimize_parameters(returns, trials=2500, mode='likelihood')   
     
     # Simulate 365 draws
     n = 365

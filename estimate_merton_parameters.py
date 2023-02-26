@@ -100,8 +100,9 @@ def optimize_parameters(returns, trials=1000, bounds=None, mode='likelihood'):
     assert mode in ['likelihood', 'method_of_moments', 'mse']
     
     # Bounds must be in order of mu, sigma, jump_rate, jump_mean, jump_std
+    mu_bound = abs(np.mean(returns))
     if bounds is None:
-        bounds = ((-1, 1), (1e-3, np.std(returns)), (1e-5, 0.5), (-1, 1), (1e-2, 1))
+        bounds = ((-mu_bound, mu_bound), (1e-3, np.std(returns)), (1e-5, 0.5), (-1, 1), (1e-2, 1))
     
     
     best_params = None
