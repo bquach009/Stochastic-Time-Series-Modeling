@@ -4,7 +4,9 @@ Code to explore Stochastic Time Series Modeling applied to stock data.
 
 ## Running Webapp
 
-1. `python app.py`
+1. Run `python app.py` in terminal. You should see something popup that says 
+`Dash is running on http://127.0.0.1:8050/`. Copy and paste this link to your 
+favorite browser. You should land on the following page.
 
 ![image info](./images/on_load_screen.png)
 
