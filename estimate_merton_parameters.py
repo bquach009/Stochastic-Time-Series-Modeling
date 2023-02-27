@@ -51,6 +51,13 @@ def log_likelihood(params, log_returns):
     return np.sum(log_likelihood)
 
 def simple_mse_calibration(params, log_returns, n_sim=1000):
+    '''
+    Generates n_sim simulation draws using the given parameters and calculates 
+    the mean squared error between sampled returns and the empirical returns.
+    This method is exremely prone to local minimum and computationally 
+    inefficient as it requires a large number of simulation draws to accurately
+    calculate the mse. 
+    '''
     mu, sigma, jump_rate, jump_mean, jump_std = params
     n = len(log_returns)
     drift = np.random.normal(mu, sigma, (n_sim, n))
@@ -60,6 +67,12 @@ def simple_mse_calibration(params, log_returns, n_sim=1000):
     return error
 
 def method_of_moments(params, log_returns, n_sim=100000):
+    '''
+    Generates n_sim simulation draws of log returns. It provides the squared 
+    error between the empirical estimates of the first five moments of the 
+    distribution and the sampled estimates of the first five moments. Also 
+    prone to local minimum with unintuitive results. 
+    '''
     mu, sigma, jump_rate, jump_mean, jump_std = params
     drift = np.random.normal(mu, sigma, n_sim)
     jump = np.random.normal(jump_mean, jump_std, n_sim) * np.random.poisson(jump_rate, n_sim)
