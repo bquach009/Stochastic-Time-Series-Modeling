@@ -121,7 +121,6 @@ def update_output(n_clicks, start_date, end_date, ticker):
     simulation_df.columns = ['Day ' + str(c) for c in simulation_df.columns]
     simulation_df.index.rename('Percentile', inplace=True)
     simulation_df = simulation_df.reset_index()
-    print(simulation_df)
     
     columns=[{'id': c, 'name': c} for c in simulation_df.columns]
     
