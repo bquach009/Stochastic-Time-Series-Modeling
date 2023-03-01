@@ -24,10 +24,15 @@ h1 {
   color: darkblue;
 }
 
-#Text {
+#Text, #Text2 {
   text-align: center;
 }
 
 #totalsales {
   display: flex;
+  min-width: 100%;
+}
+
+#statistics-grid {
+  height: auto;
 }

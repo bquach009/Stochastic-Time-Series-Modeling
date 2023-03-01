@@ -8,6 +8,7 @@ Created on Sun Feb  5 20:32:53 2023
 
 import dash_core_components as dcc
 from dash import html, Dash
+import dash_table
 from dash.dependencies import Input, Output, State
 from estimate_merton_parameters import pull_data, optimize_parameters
 from datetime import datetime, timedelta
@@ -21,15 +22,6 @@ import pandas as pd
 ###################
 
 app = Dash(__name__)
-
-# Colors
-colors = {
-    'background': '#111111',
-    'text': '#FFFFFF'
-}
-
-input_styling = {}
-
 
 app.layout = html.Div(children=[
     html.H1(children='Stock Data Visualizer'),
@@ -50,13 +42,21 @@ app.layout = html.Div(children=[
         className='row'),
         dcc.Loading(
     html.Div([
-        html.Div(id='Text'),    
+        html.H2(id='Text'),    
         dcc.Graph(id='totalsales'),
+        html.H2(id='Text2', children='Simulated Return Statistics Grid'),
+        dash_table.DataTable(id='statistics-grid', 
+                             style_table={'overflowX': 'auto', 'minWidth': '100%'}, 
+                             fixed_columns={'headers': True, 'data': 1},
+                             style_cell_conditional=[
+                                 {'if': {'column_id': 'Percentile'},
+                                  'minWidth': '150px'}])
 ]))])
 
 # Inputs trigger callback, States are read only
 @app.callback(
-    [Output('totalsales', 'figure'), Output('Text', 'children')],
+    [Output('totalsales', 'figure'), Output('Text', 'children'), 
+     Output('statistics-grid', 'data'), Output('statistics-grid', 'columns')],
     [Input('submit-val', 'n_clicks'),
      State('my-date', 'start_date'),
      State('my-date', 'end_date'),
@@ -112,7 +112,20 @@ def update_output(n_clicks, start_date, end_date, ticker):
                             name='median_simulation'))
     fig_totalsales.update_layout(title = 'Daily Closing', width=1350, height=450)
     
-    return fig_totalsales, title
+    # Calculate simulated returns
+    simulation_df = (simulation_df - starting_point) / starting_point   
+    
+    # Calculate percentile statistics for each day out
+    simulation_df = simulation_df.quantile(q=[0.1, 0.25, 0.5, 0.75, 0.9], axis=0)
+    simulation_df = simulation_df.round(2)
+    simulation_df.columns = ['Day ' + str(c) for c in simulation_df.columns]
+    simulation_df.index.rename('Percentile', inplace=True)
+    simulation_df = simulation_df.reset_index()
+    print(simulation_df)
+    
+    columns=[{'id': c, 'name': c} for c in simulation_df.columns]
+    
+    return fig_totalsales, title, simulation_df.to_dict('records'), columns
 
 if __name__ == '__main__':
     app.run_server(debug=True, use_reloader=True)
