@@ -43,7 +43,7 @@ app.layout = html.Div(children=[
         dcc.Loading(
     html.Div([
         html.H2(id='Text'),    
-        dcc.Graph(id='totalsales'),
+        dcc.Graph(id='simulated-prices', responsive=True),
         html.H2(id='Text2', children='Simulated Return Statistics Grid'),
         dash_table.DataTable(id='statistics-grid', 
                              style_table={'overflowX': 'auto', 'minWidth': '100%'}, 
@@ -55,7 +55,7 @@ app.layout = html.Div(children=[
 
 # Inputs trigger callback, States are read only
 @app.callback(
-    [Output('totalsales', 'figure'), Output('Text', 'children'), 
+    [Output('simulated-prices', 'figure'), Output('Text', 'children'), 
      Output('statistics-grid', 'data'), Output('statistics-grid', 'columns')],
     [Input('submit-val', 'n_clicks'),
      State('my-date', 'start_date'),
@@ -110,7 +110,7 @@ def update_output(n_clicks, start_date, end_date, ticker):
                              y=simulation_df.sort_values(by=[n-1]).iloc[n_sim // 2],
                             mode='lines',
                             name='median_simulation'))
-    fig_totalsales.update_layout(title = 'Daily Closing', width=1350, height=450)
+    fig_totalsales.update_layout(title = 'Daily Closing')
     
     # Calculate simulated returns
     simulation_df = (simulation_df - starting_point) / starting_point   
