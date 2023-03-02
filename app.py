@@ -44,7 +44,7 @@ app.layout = html.Div(children=[
     html.Div([
         html.H2(id='Text'),    
         dcc.Graph(id='simulated-prices', responsive=True),
-        html.H2(id='Text2', children='Simulated Return Statistics Grid'),
+        html.H2(id='Text2', children='Simulated Return On Last Close Statistics Grid'),
         dash_table.DataTable(id='statistics-grid', 
                              style_table={'overflowX': 'auto', 'minWidth': '100%'}, 
                              fixed_columns={'headers': True, 'data': 1},
@@ -56,7 +56,8 @@ app.layout = html.Div(children=[
 # Inputs trigger callback, States are read only
 @app.callback(
     [Output('simulated-prices', 'figure'), Output('Text', 'children'), 
-     Output('statistics-grid', 'data'), Output('statistics-grid', 'columns')],
+     Output('statistics-grid', 'data'), Output('statistics-grid', 'columns'),
+     Output('statistics-grid', 'style_data_conditional')],
     [Input('submit-val', 'n_clicks'),
      State('my-date', 'start_date'),
      State('my-date', 'end_date'),
@@ -116,15 +117,32 @@ def update_output(n_clicks, start_date, end_date, ticker):
     simulation_df = (simulation_df - starting_point) / starting_point   
     
     # Calculate percentile statistics for each day out
-    simulation_df = simulation_df.quantile(q=[0.1, 0.25, 0.5, 0.75, 0.9], axis=0)
+    simulation_df = simulation_df.quantile(q=[0.01, 0.1, 0.25, 0.5, 0.75, 0.9], axis=0)
     simulation_df = simulation_df.round(2)
-    simulation_df.columns = ['Day ' + str(c) for c in simulation_df.columns]
+    simulation_df.columns = ['Day ' + str(c + 1) for c in simulation_df.columns]
+    style_cell = [{
+            'if': {
+                'filter_query': '{' + column + '} > 0',
+                'column_id': column
+            },
+            'backgroundColor': 'lightgreen',
+            'color': 'white'
+        } for column in simulation_df.columns] 
+    
+    style_cell += [{
+            'if': {
+                'filter_query': '{' + column + '} < 0',
+                'column_id': column
+            },
+            'backgroundColor': '#FFCCCB',
+            'color': 'white'
+        } for column in simulation_df.columns] 
     simulation_df.index.rename('Percentile', inplace=True)
     simulation_df = simulation_df.reset_index()
     
     columns=[{'id': c, 'name': c} for c in simulation_df.columns]
     
-    return fig_totalsales, title, simulation_df.to_dict('records'), columns
+    return fig_totalsales, title, simulation_df.to_dict('records'), columns, style_cell
 
 if __name__ == '__main__':
     app.run_server(debug=True, use_reloader=True)
