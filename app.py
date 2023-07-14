@@ -6,9 +6,7 @@ Created on Sun Feb  5 20:32:53 2023
 @author: brandonquach
 """
 
-import dash_core_components as dcc
-from dash import html, Dash
-import dash_table
+from dash import html, Dash, dash_table, dcc
 from dash.dependencies import Input, Output, State
 from estimate_merton_parameters import pull_data, optimize_parameters
 from datetime import datetime, timedelta
